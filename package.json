@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "generator-eslint": "^4.0.0",
+    "yo": "^4.3.1"
+  }
+}
