@@ -49,7 +49,6 @@ module.exports = {
       'features': 'features',
       'widgets': 'widgets',
       'pages': 'pages',
-      'app': 'app',
     }
 
 
