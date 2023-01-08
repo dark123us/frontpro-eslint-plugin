@@ -72,9 +72,7 @@ module.exports = {
         if (!checkingLayers[layer]){
           return;
         }
-        console.log('layer', layer)
-        console.log('segments', segments)
-        console.log('isTestingPublicApi', isTestingPublicApi)
+
 
         if (isImportNotFromPublicApi  && !isTestingPublicApi){
           context.report(node, 'Абсолютный импорт разрешен только из Public API (index.ts)')
