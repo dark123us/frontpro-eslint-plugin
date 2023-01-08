@@ -64,16 +64,19 @@ module.exports = {
         const segments = importTo.split('/')
         const layer = segments[0];
 
-        const isImportNotFromPublicApi = segments.length > 2;
-
-        const isTestingPublicApi = segments[2] === 'testing' && segments.length < 4
-
         if (!checkingLayers[layer]){
           return;
         }
 
+        const isImportNotFromPublicApi = segments.length > 2;
+        const isTestingPublicApi = segments[2] === 'testing' && segments.length < 4
 
-        if (isImportNotFromPublicApi  && !isTestingPublicApi){
+        // console.log('importTo', importTo)
+        // console.log('testFilesPatterns', testFilesPatterns)
+        // console.log('isTestingPublicApi', isTestingPublicApi)
+        // console.log('segments', segments)
+
+        if (isImportNotFromPublicApi && !isTestingPublicApi){
           context.report(node, 'Абсолютный импорт разрешен только из Public API (index.ts)')
         }
 
@@ -84,6 +87,11 @@ module.exports = {
           const isCurrentFileTesting = testFilesPatterns.some(
               pattern => micromatch.isMatch(normalizedPath, pattern)
           )
+
+          // console.log('!isCurrentFileTesting', !isCurrentFileTesting)
+          // console.log(normalizedPath)
+          // console.log(currentFilePath)
+
 
           if(!isCurrentFileTesting) {
             context.report(node, 'Тестовые данные необходимо импортировать из publicApi/testing.ts');

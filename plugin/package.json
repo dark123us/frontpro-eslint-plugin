@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-frontpro-eslint-plugin",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "eslint rules for production",
   "keywords": [
     "eslint",

@@ -55,6 +55,24 @@ ruleTester.run("public-api-imports", rule, {
         alias: '@',
         testFilesPatterns: ['**/*.test.ts', '**/*.test.ts', '**/StoreDecorator.tsx']
       }],
+    },
+    // {
+    //   filename: 'D:\\project\\frontpro\\src\\shared\\config\\Storybook\\Decorators\\StoreDecorator.tsx',
+    //   code: "import { addCommentFormReducer } from '@/features/AddCommentForm/model/slices/addCommentFormSlice';",
+    //   errors: [],
+    //   options: [{
+    //     alias: '@',
+    //     testFilesPatterns: ['**/*.test.ts', '**/*.test.ts', '**/StoreDecorator.tsx']
+    //   }],
+    // },
+    {
+      filename: 'D:\\project\\frontpro\\src\\shared\\config\\Storybook\\Decorators\\StoreDecorator.tsx',
+      code: "import { loginReducer } from '@/features/AuthByUsername/testing';",
+      errors: [],
+      options: [{
+        alias: '@',
+        testFilesPatterns: ['**/*.test.ts', '**/*.test.ts', '**/StoreDecorator.tsx']
+      }],
     }
   ],
 
