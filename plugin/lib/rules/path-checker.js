@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require('path')
+const {isPathRelative} = require("../helpers");
 
 
 module.exports = {
@@ -29,7 +30,6 @@ module.exports = {
 
   create(context) {
     const alias  = context.options[0]?.alias ?? ''
-
     return {
       ImportDeclaration(node) {
         const value = node.source.value;
@@ -43,9 +43,6 @@ module.exports = {
   },
 };
 
-const isPathRelative = (path) => {
-  return path === '.' || path.startsWith('./') || path.startsWith('../')
-}
 
 const layers = {
   'shared': 'shared',
@@ -74,17 +71,8 @@ const shouldBeRelative = (from, to) => {
 
   const fromLayer = fromArray[1]
   const fromSlice = fromArray[2]
-  //const fromArray = projectFrom.split('\\')
   if (!fromLayer || !fromSlice || !layers[fromLayer]){
     return false
   }
-
-  console.log('fromSlice === toSlice && fromLayer === toLayer')
-  console.log(fromSlice, toSlice, fromLayer, toLayer)
-
   return fromSlice === toSlice && fromLayer === toLayer
-
 }
-
-// console.log(isPathRelative('pages/ArticlesPage/ui/ArticlesPageFilters'))
-// console.log(shouldBeRelative('D:\\projects\\frontpro\\src\\pages\\ArticlesPage\\ui\\ArticlesPage.tsx', 'pages/ArticlesPage/ui/ArticlesPageFilters'))
