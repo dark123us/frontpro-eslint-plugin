@@ -78,6 +78,10 @@ const shouldBeRelative = (from, to) => {
   if (!fromLayer || !fromSlice || !layers[fromLayer]){
     return false
   }
+
+  console.log('fromSlice === toSlice && fromLayer === toLayer')
+  console.log(fromSlice, toSlice, fromLayer, toLayer)
+
   return fromSlice === toSlice && fromLayer === toLayer
 
 }
