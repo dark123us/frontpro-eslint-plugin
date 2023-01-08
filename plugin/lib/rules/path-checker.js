@@ -6,26 +6,38 @@ const path = require('path')
 module.exports = {
   meta: {
     type: null, // `problem`, `suggestion`, or `layout`
+    messages: {
+      'link':'В рамках одного слайса все пути должны быть относительными'
+    },
     docs: {
       description: "feature sliced relative path checker",
       recommended: false,
       url: null, // URL to the documentation page for this rule
     },
     fixable: null, // Or `code` or `whitespace`
-    schema: [], // Add a schema if the rule has options
+    schema: [
+        {
+          type: 'object',
+          properties: {
+            alias: {
+              type: 'string'
+            }
+          }
+        },
+    ], // Add a schema if the rule has options
   },
 
   create(context) {
+    const alias  = context.options[0]?.alias ?? ''
 
     return {
       ImportDeclaration(node) {
-        const importTo = node.source.value
+        const value = node.source.value;
+        const importTo = alias ? value.replace(`${alias}/`, ''): value
         const fromFilename = context.getFilename()
-
         if (shouldBeRelative(fromFilename, importTo)){
-          context.report(node, 'В рамках одного слайса все пути должны быть относительны')
+          context.report({node, messageId: 'link'})
         }
-
       }
     };
   },
@@ -60,16 +72,12 @@ const shouldBeRelative = (from, to) => {
   const projectFrom = normPath.split('src')[1]
   const fromArray = projectFrom.split(path.sep)
 
-  //const fromArray = projectFrom.split('\\')
-  // console.log(fromArray)
-
   const fromLayer = fromArray[1]
   const fromSlice = fromArray[2]
-
+  //const fromArray = projectFrom.split('\\')
   if (!fromLayer || !fromSlice || !layers[fromLayer]){
     return false
   }
-
   return fromSlice === toSlice && fromLayer === toLayer
 
 }
