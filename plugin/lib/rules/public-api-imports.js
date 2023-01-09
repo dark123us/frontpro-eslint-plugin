@@ -13,6 +13,9 @@ const micromatch = require('micromatch')
 //------------------------------------------------------------------------------
 
 
+const PUBLIC_ERROR = 'PUBLIC_ERROR';
+const TESTING_PUBLIC_ERROR = 'TESTING_PUBLIC_ERROR';
+
 
 
 /** @type {import('eslint').Rule.RuleModule} */
@@ -24,7 +27,11 @@ module.exports = {
       recommended: false,
       url: null, // URL to the documentation page for this rule
     },
-    fixable: null, // Or `code` or `whitespace`
+    fixable: 'code',
+    messages: {
+      [PUBLIC_ERROR]: 'Абсолютный импорт разрешен только из Public API (index.ts)',
+      [TESTING_PUBLIC_ERROR]: 'Тестовые данные необходимо импортировать из publicApi/testing.ts',
+    },
     schema: [
       {
         type: 'object',
@@ -38,7 +45,7 @@ module.exports = {
 
         }
       },
-    ], // Add a schema if the rule has options
+    ],
   },
 
   create(context) {
@@ -63,6 +70,7 @@ module.exports = {
 
         const segments = importTo.split('/')
         const layer = segments[0];
+        const slice = segments[1];
 
         if (!checkingLayers[layer]){
           return;
@@ -70,14 +78,14 @@ module.exports = {
 
         const isImportNotFromPublicApi = segments.length > 2;
         const isTestingPublicApi = segments[2] === 'testing' && segments.length < 4
-
-        // console.log('importTo', importTo)
-        // console.log('testFilesPatterns', testFilesPatterns)
-        // console.log('isTestingPublicApi', isTestingPublicApi)
-        // console.log('segments', segments)
-
         if (isImportNotFromPublicApi && !isTestingPublicApi){
-          context.report(node, 'Абсолютный импорт разрешен только из Public API (index.ts)')
+          context.report({
+            node,
+            messageId: PUBLIC_ERROR,
+            fix: (fixer) => {
+              return fixer.replaceText(node.source, `'${alias}/${layer}/${slice}'`)
+            }
+          })
         }
 
         if(isTestingPublicApi) {
@@ -87,14 +95,14 @@ module.exports = {
           const isCurrentFileTesting = testFilesPatterns.some(
               pattern => micromatch.isMatch(normalizedPath, pattern)
           )
-
-          // console.log('!isCurrentFileTesting', !isCurrentFileTesting)
-          // console.log(normalizedPath)
-          // console.log(currentFilePath)
-
-
           if(!isCurrentFileTesting) {
-            context.report(node, 'Тестовые данные необходимо импортировать из publicApi/testing.ts');
+            context.report({
+              node,
+              messageId: TESTING_PUBLIC_ERROR,
+              fix: (fixer) => {
+                return fixer.replaceText(node.source, `'${alias}/${layer}/${slice}'`)
+              }
+            });
           }
         }
 
