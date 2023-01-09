@@ -26,7 +26,19 @@ ruleTester.run("path-checker", rule, {
       code: "import { addCommentFormActions, addCommentFormReducer } from '../../model/slices/addCommentFormSlice'",
       errors: [],
     },
+    {
+      filename: 'D:\\projects\\frontpro\\config\\storybook\\preview.js',
+      code: "import { SuspenseDecorator } from '@/shared/config/Storybook/Decorators/SuspenseDecorator';",
+      errors: [],
+      options: [
+        {
+          alias: '@'
+        }
+      ]
+    },
   ],
+
+
 
   invalid: [
     {
